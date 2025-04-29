@@ -1,10 +1,13 @@
-import React from "react";
+import React, { lazy, Suspense } from "react";
+import Chats from "./Chats";
+
+//Dynamic Loading
 
 const GeneralApp = () => {
 
   return (
     <>
-      App
+     <Chats/>
     </>
   );
 };
