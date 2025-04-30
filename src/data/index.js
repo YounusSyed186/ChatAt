@@ -163,7 +163,7 @@ const Chat_History = [
     type: "msg",
     subtype: "img",
     message: "Here You Go",
-    img: faker.image.abstract(),
+    img: "https://repository-images.githubusercontent.com/260096455/47f1b200-8b2e-11ea-8fa1-ab106189aeb0",
     incoming: true,
     outgoing: false,
   },
@@ -184,7 +184,7 @@ const Chat_History = [
   {
     type: "msg",
     subtype: "link",
-    preview: faker.image.cats(),
+    preview2: "https://repository-images.githubusercontent.com/260096455/47f1b200-8b2e-11ea-8fa1-ab106189aeb0",
     message: "Yep, I can also do that",
     incoming: true,
     outgoing: false,

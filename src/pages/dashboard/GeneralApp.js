@@ -1,14 +1,23 @@
-import React, { lazy, Suspense } from "react";
+import React from "react";
 import Chats from "./Chats";
-
-//Dynamic Loading
+import { Box, Stack } from "@mui/material";
+import Conversation from "../../components/conversation";
 
 const GeneralApp = () => {
-
   return (
-    <>
-     <Chats/>
-    </>
+    <Stack direction={"row"} spacing={1} sx={{ width: "100%" }}>
+      <Chats />
+      <Box
+        sx={{
+          height: "100vh",
+          width: "calc(100vw - 390px)",
+          backgroundColor: "#fff",
+        }}
+      >
+        {/* Conversation */}
+        <Conversation/>
+      </Box>
+    </Stack>
   );
 };
 

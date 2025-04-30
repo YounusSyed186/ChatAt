@@ -235,14 +235,14 @@ const Chats = () => {
       sx={{
         position: "relative",
         height: "100vh",
-        width: 360, // Original width retained
+        width: 330, // Original width retained
         backgroundColor: theme.palette.background.default,
         boxShadow: "0px 4px 15px rgba(0, 0, 0, 0.1)",
         borderRadius: 3,
         overflow: "hidden",
       }}
     >
-      <Stack p={3} spacing={3} sx={{ height: "100%" }}>
+      <Stack p={1} spacing={3} sx={{ height: "100%" }}>
         {/* Header */}
         <Stack direction="row" alignItems="center" justifyContent="space-between">
           <Typography variant="h5" sx={{ fontWeight: "bold", color: theme.palette.text.primary }}>
