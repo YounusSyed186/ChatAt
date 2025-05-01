@@ -73,7 +73,7 @@ const Header = () => {
           anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
           variant="dot"
         >
-          <Avatar src="https://via.placeholder.com/150" alt="User Avatar" />
+          <Avatar src="/avatar.png" alt="User Avatar" />
         </StyledBadge>
         <Stack direction="column" spacing={0.5}>
           <Typography

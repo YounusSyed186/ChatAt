@@ -49,7 +49,7 @@ const Nav_Setting = [
 const ChatList = [
   {
     id: 0,
-    img: faker.image.avatar(),
+    img: "/avatar.png",
     name: faker.name.firstName(),
     msg: faker.music.songName(),
     time: "9:36",
@@ -59,7 +59,7 @@ const ChatList = [
   },
   {
     id: 1,
-    img: faker.image.avatar(),
+    img: "/avatar.png",
     name: faker.name.firstName(),
     msg: faker.music.songName(),
     time: "12:02",
@@ -69,7 +69,7 @@ const ChatList = [
   },
   {
     id: 2,
-    img: faker.image.avatar(),
+    img: "/avatar.png",
     name: faker.name.firstName(),
     msg: faker.music.songName(),
     time: "10:35",
@@ -79,7 +79,7 @@ const ChatList = [
   },
   {
     id: 3,
-    img: faker.image.avatar(),
+    img: "/avatar.png",
     name: faker.name.firstName(),
     msg: faker.music.songName(),
     time: "04:00",
@@ -89,7 +89,7 @@ const ChatList = [
   },
   {
     id: 4,
-    img: faker.image.avatar(),
+    img: "/avatar.png",
     name: faker.name.firstName(),
     msg: faker.music.songName(),
     time: "08:42",
@@ -99,7 +99,7 @@ const ChatList = [
   },
   {
     id: 5,
-    img: faker.image.avatar(),
+    img: "/avatar.png",
     name: faker.name.firstName(),
     msg: faker.music.songName(),
     time: "08:42",
@@ -109,7 +109,7 @@ const ChatList = [
   },
   {
     id: 6,
-    img: faker.image.avatar(),
+    img: "/avatar.png",
     name: faker.name.firstName(),
     msg: faker.music.songName(),
     time: "08:42",
@@ -119,7 +119,7 @@ const ChatList = [
   },
   {
     id: 7,
-    img: faker.image.avatar(),
+    img: "/avatar.png",
     name: faker.name.firstName(),
     msg: faker.music.songName(),
     time: "08:42",

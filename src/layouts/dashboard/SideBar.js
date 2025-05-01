@@ -114,7 +114,7 @@ const Sidebar = () => {
                     <Stack spacing={2} alignItems="center">
                         <Switch onChange={onToggleMode} defaultChecked />
                         <Avatar
-                            src={faker.image.avatar()}
+                            src={"/avatar.png"}
                             onClick={handleClick}
                             sx={{ cursor: "pointer" }}
                         />

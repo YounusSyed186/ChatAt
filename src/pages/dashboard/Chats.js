@@ -52,7 +52,7 @@ const ScrollableContainer = styled("div")(() => ({
   overflowY: "auto", // Enable vertical scrolling
   overflowX: "hidden", // Disable horizontal scrolling
   scrollbarWidth: "none", // For Firefox
-  "-ms-overflow-style": "none", // For Internet Explorer and Edge
+  msOverflowStyle: 'none' , // For Internet Explorer and Edge
   "&::-webkit-scrollbar": {
     display: "none", // Hide scroll bar for Chrome, Safari, and Opera
   },
@@ -66,7 +66,7 @@ const chatList = [
     message: "You: thanks",
     time: "12:00",
     unreadCount: 2,
-    avatar: faker.image.avatar(),
+    avatar: "/avatar.png",
     isPinned: true, // Mark as pinned
   },
   {
@@ -75,7 +75,7 @@ const chatList = [
     message: "Let's meet tomorrow",
     time: "11:45",
     unreadCount: 1,
-    avatar: faker.image.avatar(),
+    avatar: "/avatar.png",
     isPinned: false,
   },
   {
@@ -84,7 +84,7 @@ const chatList = [
     message: "Okay, see you!",
     time: "10:30",
     unreadCount: 0,
-    avatar: faker.image.avatar(),
+    avatar: "/avatar.png",
     isPinned: false,
   },
   {
@@ -93,7 +93,7 @@ const chatList = [
     message: "Can you send me the file?",
     time: "09:15",
     unreadCount: 3,
-    avatar: faker.image.avatar(),
+    avatar: "/avatar.png",
     isPinned: true, // Mark as pinned
   },
   {
@@ -102,7 +102,7 @@ const chatList = [
     message: "Sure, I'll do it.",
     time: "08:45",
     unreadCount: 0,
-    avatar: faker.image.avatar(),
+    avatar: "/avatar.png",
     isPinned: false,
   },
 ];
