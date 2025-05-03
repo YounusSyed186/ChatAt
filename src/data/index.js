@@ -220,6 +220,74 @@ const Message_options = [
   },
 ];
 
+const Shared_links =[
+  {
+    type:'msg',
+    subtype:'link',
+    preview:faker.image.cats(),
+    message:"yep, I can also do that",
+    incoming:true,
+    outcoming:false,
+  },
+  {
+    type:'msg',
+    subtype:'link',
+    preview:faker.image.cats(),
+    message:"yep, I can also do that",
+    incoming:true,
+    outcoming:false,
+  },
+  {
+    type:'msg',
+    subtype:'link',
+    preview:faker.image.cats(),
+    message:"yep, I can also do that",
+    incoming:true,
+    outcoming:false,
+  },
+  {
+    type:'msg',
+    subtype:'link',
+    preview:faker.image.cats(),
+    message:"yep, I can also do that",
+    incoming:true,
+    outcoming:false,
+  },
+];
+
+const Shared_Docs =[
+  {
+    type:'msg',
+    subtype:'doc',
+    message:"yep, I can also do that",
+    incoming:true,
+    outcoming:false,
+  },
+  {
+    type:'msg',
+    subtype:'doc',
+    message:"yep, I can also do that",
+    incoming:true,
+    outcoming:false,
+  },
+  {
+    type:'msg',
+    subtype:'doc',
+    message:"yep, I can also do that",
+    incoming:true,
+    outcoming:false,
+  },
+  {
+    type:'msg',
+    subtype:'doc',
+    message:"yep, I can also do that",
+    incoming:true,
+    outcoming:false,
+  }
+];
+
+
+
 export {
   Profile_Menu,
   Nav_Setting,
@@ -227,4 +295,6 @@ export {
   ChatList,
   Chat_History,
   Message_options,
+  Shared_links,
+  Shared_Docs,
 };

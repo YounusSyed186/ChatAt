@@ -87,12 +87,37 @@ const MessageWrapper = ({ el, children }) => {
   );
 };
 
-const MsgType = ({ el }) => {
+const MsgType = ({ el, withWrapper = true }) => {
   const theme = useTheme();
   if (!el?.message) return null;
 
-  return (
-    <MessageWrapper el={el}>
+  const content = (
+    <Typography
+      variant="body2"
+      sx={{
+        color: el.incoming
+          ? theme.palette.text.primary
+          : theme.palette.primary.contrastText,
+      }}
+    >
+      {el.message}
+    </Typography>
+  );
+
+  return withWrapper ? <MessageWrapper el={el}>{content}</MessageWrapper> : content;
+};
+
+const MediaMsg = ({ el, withWrapper = true }) => {
+  const theme = useTheme();
+  if (!el) return null;
+
+  const content = (
+    <Stack spacing={1}>
+      <img
+        src={el.img}
+        alt={el.message || "media"}
+        style={{ maxHeight: 210, borderRadius: 8 }}
+      />
       <Typography
         variant="body2"
         sx={{
@@ -103,129 +128,104 @@ const MsgType = ({ el }) => {
       >
         {el.message}
       </Typography>
-    </MessageWrapper>
+    </Stack>
   );
+
+  return withWrapper ? <MessageWrapper el={el}>{content}</MessageWrapper> : content;
 };
 
-const MediaMsg = ({ el }) => {
-  const theme = useTheme();
-  if (!el) return null;
-
-  return (
-    <MessageWrapper el={el}>
-      <Stack spacing={1}>
-        <img
-          src={el.img}
-          alt={el.message || "media"}
-          style={{ maxHeight: 210, borderRadius: 8 }}
-        />
-        <Typography
-          variant="body2"
-          sx={{
-            color: el.incoming
-              ? theme.palette.text.primary
-              : theme.palette.primary.contrastText,
-          }}
-        >
-          {el.message}
-        </Typography>
-      </Stack>
-    </MessageWrapper>
-  );
-};
-
-const LinkMsg = ({ el }) => {
+const LinkMsg = ({ el, withWrapper = true }) => {
   const theme = useTheme();
   if (!el?.preview || !el.message) return null;
 
-  return (
-    <MessageWrapper el={el}>
-      <Stack spacing={1}>
-        <Box
-          component="img"
-          src={el.preview}
-          alt={el.message}
-          onError={(e) => {
-            e.target.onerror = null;
-            e.target.src = "https://dummyimage.com/150x150/cccccc/000000&text=No+Image";
-          }}
-          sx={{ maxHeight: 210, borderRadius: 1 }}
-        />
-        <Typography
-          variant="subtitle2"
-          sx={{
-            color: el.incoming
-              ? theme.palette.text.primary
-              : theme.palette.primary.contrastText,
-          }}
-        >
-          {el.message}
-        </Typography>
-      </Stack>
-    </MessageWrapper>
+  const content = (
+    <Stack spacing={1}>
+      <Box
+        component="img"
+        src={el.preview}
+        alt={el.message}
+        onError={(e) => {
+          e.target.onerror = null;
+          e.target.src = "https://dummyimage.com/150x150/cccccc/000000&text=No+Image";
+        }}
+        sx={{ maxHeight: 210, borderRadius: 1 }}
+      />
+      <Typography
+        variant="subtitle2"
+        sx={{
+          color: el.incoming
+            ? theme.palette.text.primary
+            : theme.palette.primary.contrastText,
+        }}
+      >
+        {el.message}
+      </Typography>
+    </Stack>
   );
+
+  return withWrapper ? <MessageWrapper el={el}>{content}</MessageWrapper> : content;
 };
 
-const ReplayMsg = ({ el }) => {
+const ReplayMsg = ({ el, withWrapper = true }) => {
   const theme = useTheme();
   if (!el?.message || !el.reply) return null;
 
-  return (
-    <MessageWrapper el={el}>
-      <Stack spacing={1}>
-        <Typography
-          variant="body2"
-          sx={{ color: theme.palette.text.primary }}
-        >
-          {el.message}
-        </Typography>
-        <Typography
-          variant="body2"
-          sx={{
-            color: el.incoming
-              ? theme.palette.text.secondary
-              : theme.palette.primary.contrastText,
-          }}
-        >
-          {el.reply}
-        </Typography>
-      </Stack>
-    </MessageWrapper>
+  const content = (
+    <Stack spacing={1}>
+      <Typography variant="body2" sx={{ color: theme.palette.text.primary }}>
+        {el.message}
+      </Typography>
+      <Typography
+        variant="body2"
+        sx={{
+          color: el.incoming
+            ? theme.palette.text.secondary
+            : theme.palette.primary.contrastText,
+        }}
+      >
+        {el.reply}
+      </Typography>
+    </Stack>
   );
+
+  return withWrapper ? <MessageWrapper el={el}>{content}</MessageWrapper> : content;
 };
 
-const DocMsg = ({ el }) => {
+
+const DocMsg = ({ el, withWrapper = true }) => {
   const theme = useTheme();
 
-  return (
-    <MessageWrapper el={el}>
-      <Stack spacing={2}>
-        <Stack
-          p={2}
-          direction="row"
-          spacing={2}
-          alignItems="center"
-          sx={{
-            backgroundColor: theme.palette.background.paper,
-            borderRadius: 1,
-          }}
-        >
-          <ImageIcon size={40} />
-          <Typography variant="caption">abstract.png</Typography>
-          <IconButton>
-            <DownloadSimple />
-          </IconButton>
-        </Stack>
-        <Typography
-          variant="body2"
-          sx={{ color: theme.palette.text.primary }}
-        >
-          {el.message}
-        </Typography>
+  const Content = (
+    <Stack spacing={2} p={1} sx={{ boxShadow: theme.shadows[3] }}>
+      <Stack
+        p={2}
+        direction="row"
+        spacing={2}
+        alignItems="center"
+        sx={{
+          backgroundColor: theme.palette.background.paper,
+          borderRadius: 1,
+          
+        }}
+      >
+        <ImageIcon size={40} />
+        <Typography variant="caption">abstract.png</Typography>
+        <IconButton>
+          <DownloadSimple />
+        </IconButton>
       </Stack>
-    </MessageWrapper>
+      <Typography
+        variant="body2"
+        sx={{ color: theme.palette.text.primary }}
+      >
+        {el.message}
+      </Typography>
+    </Stack>
   );
+
+  return withWrapper ? <MessageWrapper el={el}>{Content}</MessageWrapper> : Content;
 };
+
 
 const TimeLine = ({ el }) => {
   const theme = useTheme();

@@ -34,7 +34,7 @@ const Conversation = () => {
       <Header />
 
       {/* Message Area */}
-      <MessageArea />
+      <MessageArea withWrapper={true} />
 
       {/* Footer */}
       <Footer

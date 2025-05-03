@@ -78,6 +78,7 @@ const Header = () => {
           variant="dot"
           onClick={() => {
             setOpen(!user.open);
+            setType("CONTACT");
           }}
         >
           <Avatar src="/avatar.png" alt="User Avatar" />

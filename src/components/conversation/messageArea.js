@@ -1,10 +1,17 @@
 import React from "react";
 import { Box, Stack } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import { Chat_History } from "../../data"; // Adjust the import path as necessary
-import { TimeLine, MsgType, MediaMsg, ReplayMsg, LinkMsg, DocMsg } from "./textMessage.js";
+import { Chat_History } from "../../data";
+import {
+  TimeLine,
+  MsgType,
+  MediaMsg,
+  ReplayMsg,
+  LinkMsg,
+  DocMsg,
+} from "./textMessage.js";
 
-const MessageArea = () => {
+const MessageArea = ({ withWrapper = true }) => {
   const theme = useTheme();
 
   return (
@@ -13,12 +20,12 @@ const MessageArea = () => {
         flex: 1,
         padding: 2,
         overflowY: "auto",
-        backgroundColor: theme.palette.background.default, // Use theme background
+        backgroundColor: theme.palette.background.default,
         "&::-webkit-scrollbar": {
-          display: "none", // Hide scrollbar for WebKit browsers
+          display: "none",
         },
-        msOverflowStyle: "none", // Hide scrollbar for Internet Explorer and Edge
-        scrollbarWidth: "none", // Hide scrollbar for Firefox
+        msOverflowStyle: "none",
+        scrollbarWidth: "none",
       }}
     >
       <Stack spacing={3}>
@@ -28,18 +35,19 @@ const MessageArea = () => {
               return <TimeLine key={el.id || index} el={el} />;
 
             case "msg":
+              const commonProps = { key: el.id || index, el, withWrapper };
+
               switch (el.subtype) {
                 case "img":
-                  return <MediaMsg key={el.id || index} el={el} />;
+                  return <MediaMsg {...commonProps} />;
                 case "doc":
-                  // Handle document messages here
-                  return <DocMsg key={el.id || index} el={el} />;
+                  return <DocMsg {...commonProps} />;
                 case "link":
-                  return <LinkMsg key={el.id || index} el={el} />;
+                  return <LinkMsg {...commonProps} />;
                 case "reply":
-                  return <ReplayMsg key={el.id || index} el={el} />;
+                  return <ReplayMsg {...commonProps} />;
                 default:
-                  return <MsgType key={el.id || index} el={el} />;
+                  return <MsgType {...commonProps} />;
               }
 
             default:
