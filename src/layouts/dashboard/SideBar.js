@@ -27,7 +27,7 @@ const Sidebar = () => {
     const handleClick = (event) => setAnchorEl(event.currentTarget);
     const handleClose = () => setAnchorEl(null);
 
-    const nav =useNavigate()
+    const navigate = useNavigate()
     return (
         <Box sx={{ display: "flex", height: "100vh", width: "100%", gap: 1 }}>
             {/* Sidebar */}
@@ -75,14 +75,13 @@ const Sidebar = () => {
                                     }}
                                 >
                                     <IconButton
+                                        key={item.index}
                                         onClick={() => {
-                                            setSelected(item.index)
+                                            setSelected(item.index);
+                                            if (item.path) navigate(item.path);
                                         }}
                                         sx={{
-                                            color:
-                                                selected === item.index
-                                                    ? "#fff"
-                                                    : theme.palette.text.primary,
+                                            color: selected === item.index ? theme.palette.primary.contrastText : theme.palette.text.secondary,
                                         }}
                                     >
                                         {item.icon}
@@ -104,7 +103,7 @@ const Sidebar = () => {
                                         setSelected(3)
                                         nav("/setting")
                                     }}
-                                    
+
                                     sx={{
                                         color:
                                             selected === 3

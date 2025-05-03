@@ -8,7 +8,6 @@ import {
   User,
   Users,
 } from "phosphor-react";
-import { useNavigate } from "react-router-dom";
 
 
 const Profile_Menu = [
@@ -30,14 +29,18 @@ const Nav_Buttons = [
   {
     index: 0,
     icon: <ChatCircleDots />,
+    path: "/app"
   },
   {
     index: 1,
     icon: <Users />,
+    path: "/Group"
+  
   },
   {
     index: 2,
     icon: <Phone />,
+    path:""
   },
 ];
 
