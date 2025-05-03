@@ -17,6 +17,7 @@ import {
   MagnifyingGlass,
   CaretDown,
 } from "phosphor-react";
+import useStore from "../../zestand/store";
 
 // Styled Badge for online status
 const StyledBadge = styled(Badge)(({ theme }) => ({
@@ -50,20 +51,23 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 
 const Header = () => {
   const theme = useTheme();
+  const user = useStore((state) => state.user);
+  const setOpen = useStore((state) => state.setOpen);
+  const setType = useStore((state) => state.setType);
 
   return (
     <Box
       sx={{
         padding: 1,
-        backgroundColor: theme.palette.primary.main, // Use theme primary color
-        color: theme.palette.primary.contrastText, // Use theme contrast text
+        backgroundColor: theme.palette.primary.main,
+        color: theme.palette.primary.contrastText,
         display: "flex",
         borderRadius: 1,
         alignItems: "center",
         justifyContent: "space-between",
       }}
     >
-      {/* Left Section: Back Button and User Details */}
+      {/* Left Section */}
       <Stack direction="row" alignItems="center" spacing={2}>
         <IconButton sx={{ color: theme.palette.primary.contrastText }}>
           <ArrowLeft />
@@ -72,26 +76,21 @@ const Header = () => {
           overlap="circular"
           anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
           variant="dot"
+          onClick={() => {
+            setOpen(!user.open);
+          }}
         >
           <Avatar src="/avatar.png" alt="User Avatar" />
         </StyledBadge>
         <Stack direction="column" spacing={0.5}>
-          <Typography
-            variant="subtitle1"
-            sx={{ fontWeight: "bold", color: theme.palette.primary.contrastText }}
-          >
+          <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>
             John Doe
           </Typography>
-          <Typography
-            variant="body2"
-            sx={{ color: theme.palette.primary.contrastText }}
-          >
-            Online
-          </Typography>
+          <Typography variant="body2">Online</Typography>
         </Stack>
       </Stack>
 
-      {/* Right Section: Action Icons */}
+      {/* Right Section */}
       <Stack direction="row" spacing={2} alignItems="center">
         <IconButton sx={{ color: theme.palette.primary.contrastText }}>
           <VideoCamera />
@@ -118,5 +117,6 @@ const Header = () => {
     </Box>
   );
 };
+
 
 export default Header;

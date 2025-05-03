@@ -7,6 +7,7 @@ import reportWebVitals from "./reportWebVitals";
 
 // contexts
 import SettingsProvider from "./contexts/SettingsContext";
+import "./i18n"; // Import i18n configuration
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
@@ -15,7 +16,9 @@ root.render(
     <HelmetProvider>
       <SettingsProvider>
         <BrowserRouter>
-          <App />
+          
+            <App />
+        
         </BrowserRouter>
       </SettingsProvider>
     </HelmetProvider>
