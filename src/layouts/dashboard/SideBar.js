@@ -10,7 +10,7 @@ import {
     useTheme,
 } from "@mui/material";
 import React, { useState } from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import Logo from "../../assets/Images/logo.ico";
 import { Nav_Buttons, Profile_Menu } from "../../data";
 import { Gear } from "phosphor-react";
@@ -27,6 +27,7 @@ const Sidebar = () => {
     const handleClick = (event) => setAnchorEl(event.currentTarget);
     const handleClose = () => setAnchorEl(null);
 
+    const nav =useNavigate()
     return (
         <Box sx={{ display: "flex", height: "100vh", width: "100%", gap: 1 }}>
             {/* Sidebar */}
@@ -74,7 +75,9 @@ const Sidebar = () => {
                                     }}
                                 >
                                     <IconButton
-                                        onClick={() => setSelected(item.index)}
+                                        onClick={() => {
+                                            setSelected(item.index)
+                                        }}
                                         sx={{
                                             color:
                                                 selected === item.index
@@ -97,7 +100,11 @@ const Sidebar = () => {
                                 }}
                             >
                                 <IconButton
-                                    onClick={() => setSelected(3)}
+                                    onClick={() => {
+                                        setSelected(3)
+                                        nav("/setting")
+                                    }}
+                                    
                                     sx={{
                                         color:
                                             selected === 3
