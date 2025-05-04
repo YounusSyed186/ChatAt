@@ -40,7 +40,7 @@ const Nav_Buttons = [
   {
     index: 2,
     icon: <Phone />,
-    path:""
+    path:"/call"
   },
 ];
 
