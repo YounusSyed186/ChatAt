@@ -12,14 +12,14 @@ const Sidebar = () => {
     const { onToggleMode } = useSettings();
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
-    
+
     const navigate = useNavigate();
     const location = useLocation(); // Get current location
-    
+
     useEffect(() => {
         // Sync the selected state with the current route
         const currentPath = location.pathname;
-        
+
         // Check if the path matches one of your nav buttons' paths
         Nav_Buttons.forEach((item, index) => {
             if (currentPath.includes(item.path)) {
@@ -33,9 +33,23 @@ const Sidebar = () => {
         }
     }, [location.pathname]); // Update on route change
 
-    const handleClick = (event) => setAnchorEl(event.currentTarget);
-    const handleClose = () => setAnchorEl(null);
-
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget)
+    };
+    const handleClose = () => {
+        setAnchorEl(null);
+    }
+    const getMenuPath = (index) => {
+        switch (index) {
+            case 0:
+                return "/Profile"
+            case 1:
+                return "/setting"
+            case 2:
+                //todo => Update token set is auth to false
+                return "auth/login"
+        }
+    }
     return (
         <Box sx={{ display: "flex", height: "100vh", width: "100%", gap: 1 }}>
             {/* Sidebar */}
@@ -90,8 +104,11 @@ const Sidebar = () => {
                         >
                             <Stack spacing={1} px={1}>
                                 {Profile_Menu.map((el, index) => (
-                                    <MenuItem key={index} onClick={handleClose}>
-                                        <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={2} sx={{ width: 120 }}>
+                                    <MenuItem key={index} onClick={() => {
+                                        handleClick();
+                                    }
+                                    }>
+                                        <Stack onClick={()=>navigate(getMenuPath(index))} direction="row" alignItems="center" justifyContent="space-between" spacing={2} sx={{ width: 120 }}>
                                             <span>{el.title}</span>
                                             {el.icon}
                                         </Stack>

@@ -21,7 +21,7 @@ export default function Router() {
   return useRoutes([
     {
       path:"/auth",
-      element:<MainLayout/>,
+      element:<MainLayout />,
       children:[
         {element:<Login />, path:"login"},
         {element:<Register/>, path:"register"}
@@ -36,6 +36,8 @@ export default function Router() {
         // /setting
         { path: "Setting", element: <Setting /> },
         { path: "Group", element: <Group /> },
+        { path: "call", element: <Call /> },
+        { path: "Profile", element: <Profile /> },
         
         
         { path: "404", element: <Page404 /> },
@@ -54,6 +56,12 @@ const Group = Loadable(
 );
 const Login = Loadable(
   lazy(() => import("../pages/auth/login")),
+);
+const Call = Loadable(
+  lazy(() => import("../pages/dashboard/call")),
+);
+const Profile = Loadable(
+  lazy(() => import("../pages/dashboard/Profile")),
 );
 
 const Register =Loadable(

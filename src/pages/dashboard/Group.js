@@ -17,6 +17,7 @@ import {
   MagnifyingGlass,
   Plus,
 } from "phosphor-react";
+import CreateGroups from "../../sections/main/CreateGroup";
 
 // Online Status Badge
 const StyledBadge = styled(Badge)(({ theme }) => ({
@@ -195,6 +196,7 @@ const chatList = [
 const Group = () => {
   const theme = useTheme();
   const [selectedChat, setSelectedChat] = useState(null);
+  const [CreateGroup, setCreateGroup] = useState(false)
 
   const pinned = chatList.filter((chat) => chat.isPinned);
   const regular = chatList.filter((chat) => !chat.isPinned);
@@ -243,7 +245,9 @@ const Group = () => {
         }}
       >
         <Typography fontWeight={500}>Create New Group</Typography>
+        <IconButton onClick={()=> setCreateGroup(true)}>
         <Plus size={20} />
+        </IconButton>
       </Box>
 
       {/* Chat List Scrollable */}
@@ -281,6 +285,7 @@ const Group = () => {
           ))}
         </Stack>
       </ScrollArea>
+      <CreateGroups open={CreateGroup} handleClose={() => setCreateGroup(false)} />
     </Box>
   );
 };
