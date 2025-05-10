@@ -24,7 +24,8 @@ export default function Router() {
       element:<MainLayout />,
       children:[
         {element:<Login />, path:"login"},
-        {element:<Register/>, path:"register"}
+        {element:<Register/>, path:"register"},
+        {element:<ForgetPassword/>, path:"ForgetPassword"}
       ]
     },
     {
@@ -66,6 +67,9 @@ const Profile = Loadable(
 
 const Register =Loadable(
   lazy(()=>import("../pages/auth/register"))
+)
+const ForgetPassword =Loadable(
+  lazy(()=>import("../pages/auth/forgetPassword"))
 )
 const Setting = Loadable(
   lazy(() => import("../pages/dashboard/setting")),

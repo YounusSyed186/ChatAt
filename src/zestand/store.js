@@ -11,4 +11,5 @@ const useStore = create((set) => ({
   setType: (type) => set((state) => ({ user: { ...state.user, type } })),
 }));
 
+
 export default useStore;

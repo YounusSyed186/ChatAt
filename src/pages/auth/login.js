@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
     Box,
     Button,
@@ -12,40 +12,65 @@ import {
 } from '@mui/material';
 import { Lock, EnvelopeSimple } from 'phosphor-react';
 import { useNavigate } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup'; // Import yup for validation
 import AuthSocial from '../../sections/auth/AuthSocial';
-
-// Define your Yup validation schema
-const loginSchema = yup.object().shape({
-    email: yup
-        .string()
-        .email('Enter a valid email')
-        .required('Email is required'),
-    password: yup
-        .string()
-        .min(6, 'Password must be at least 6 characters')
-        .required('Password is required'),
-});
+import { BASE_URL } from '../../config';
+import axios from 'axios';
+import authState from '../../zestand/authStates';
 
 const Login = () => {
-    const nav = useNavigate();
     const theme = useTheme();
+    const nav = useNavigate();
 
-    // Use react-hook-form with Yup resolver
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-    } = useForm({
-        resolver: yupResolver(loginSchema), // Use Yup for validation
-    });
+    // ✅ Local state
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [errors, setErrors] = useState({});
 
-    const onSubmit = (data) => {
-        console.log('Logging in:', data);
-        // Add your API logic here
+    const validate = () => {
+        const newErrors = {};
+        if (!email) newErrors.email = 'Email is required';
+        else if (!/\S+@\S+\.\S+/.test(email)) newErrors.email = 'Enter a valid email';
+
+        if (!password) newErrors.password = 'Password is required';
+        else if (password.length < 6) newErrors.password = 'Password must be at least 6 characters';
+
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
     };
+
+    const handleLogin = async (e) => {
+        e.preventDefault();
+        if (!validate()) return;
+        console.log("BASE_URL is:", BASE_URL);
+        const { setToken, setUser, setuserLoggedIn } = authState.getState();
+
+        try {
+            const response = await axios.post(`${BASE_URL}/api/login`, { email, password }, {
+                headers: { 'Content-Type': 'application/json' },
+            });
+
+            const { token, user } = response.data.message;
+
+            // Log the response data
+            console.log("Response Data:", response.data);
+
+            setToken(token);
+            setUser(user);
+            setuserLoggedIn(true);
+
+            localStorage.setItem('token', token);
+            localStorage.setItem('user', JSON.stringify(user));
+
+            console.log('Login success:', user);
+            nav('/');
+        } catch (error) {
+            const errorMessage = error.response?.data?.message || error.message || 'Login failed. Please try again.';
+            console.error('Login failed:', errorMessage);
+            alert(errorMessage);
+        }
+    };
+
+
 
     return (
         <Box
@@ -81,15 +106,17 @@ const Login = () => {
                         <Typography variant="subtitle1" color="text.secondary" mb={3}>
                             Sign in to continue chatting
                         </Typography>
-                        <Box component="form" onSubmit={handleSubmit(onSubmit)} width="100%">
+
+                        <Box component="form" onSubmit={handleLogin} width="100%">
                             {/* Email Field */}
                             <TextField
                                 fullWidth
                                 label="Email"
                                 type="email"
-                                {...register('email')}
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
                                 error={!!errors.email}
-                                helperText={errors.email?.message}
+                                helperText={errors.email}
                                 margin="normal"
                                 InputProps={{
                                     startAdornment: (
@@ -105,9 +132,10 @@ const Login = () => {
                                 fullWidth
                                 label="Password"
                                 type="password"
-                                {...register('password')}
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
                                 error={!!errors.password}
-                                helperText={errors.password?.message}
+                                helperText={errors.password}
                                 margin="normal"
                                 InputProps={{
                                     startAdornment: (
@@ -118,7 +146,12 @@ const Login = () => {
                                 }}
                             />
 
-                            {/* Submit Button */}
+                            <Box sx={{ textAlign: 'end' }}>
+                                <Button onClick={() => nav('/auth/ForgetPassword')} color="primary">
+                                    Forgot password?
+                                </Button>
+                            </Box>
+
                             <Button
                                 type="submit"
                                 fullWidth
@@ -128,6 +161,7 @@ const Login = () => {
                                 Login
                             </Button>
                         </Box>
+
                         <Box sx={{ mt: 2 }}>
                             <Typography variant="body2" color="text.secondary">
                                 Don&apos;t have an account?{' '}
@@ -136,6 +170,7 @@ const Login = () => {
                                 </Button>
                             </Typography>
                         </Box>
+
                         <AuthSocial />
                     </Box>
                 </Paper>
