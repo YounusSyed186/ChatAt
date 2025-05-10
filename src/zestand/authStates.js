@@ -8,17 +8,20 @@ const authState = create(
       token: "",
       user: null,
       isLoading: false,
+      logout:false,
 
       setuserLoggedIn: (userLoggedIn) => set({ userLoggedIn }),
       setToken: (token) => set({ token }),
       setUser: (user) => set({ user }),
       setIsLoading: (isLoading) => set({ isLoading }),
+      setLogout: (logout) => set({ logout }),
       clear: () =>
         set({
           userLoggedIn: false,
           token: "",
           user: null,
           isLoading: false,
+          logout: true,
         }),
     }),
     {
@@ -27,6 +30,7 @@ const authState = create(
         userLoggedIn: state.userLoggedIn,
         token: state.token,
         user: state.user,
+        logout :state.logout
       }),
     }
   )

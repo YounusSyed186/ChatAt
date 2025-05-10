@@ -17,7 +17,11 @@ import {
   ArchiveBox,
   CircleDashed,
   MagnifyingGlass,
+  Rows,
+  User,
+  Users,
 } from "phosphor-react";
+import Friends from "../../sections/main/friends";
 
 // Styled Badge for online status
 const StyledBadge = styled(Badge)(({ theme }) => ({
@@ -218,6 +222,14 @@ const chatList = [
 
 // Main Component
 const Chats = () => {
+  const [openDialdog, setopenDialdog] = useState(false)
+
+  const handleOpenDialog = () => {
+    setopenDialdog(true)
+  }
+  const handleCloseDialog = () => {
+    setopenDialdog(false)
+  }
   const theme = useTheme();
   const [selectedChat, setSelectedChat] = useState(null);
 
@@ -229,92 +241,103 @@ const Chats = () => {
   const allChats = chatList.filter((chat) => !chat.isPinned);
 
   return (
-    <Box
-      sx={{
-        height: "100vh",
-        width: 330,
-        backgroundColor: theme.palette.background.default,
-        borderRadius: 3,
-        boxShadow: theme.shadows[5],
-        p: 2,
-      }}
-    >
-      <Stack spacing={3} height="100%">
-        {/* Header */}
-        <Stack direction="row" justifyContent="space-between" alignItems="center">
-          <Typography variant="h6" fontWeight={700}>
-            Chats
-          </Typography>
-          <IconButton>
-            <CircleDashed size={22} color={theme.palette.text.primary} />
-          </IconButton>
-        </Stack>
+    <>
 
-        {/* Search */}
-        <Search>
-          <SearchIconWrapper>
-            <MagnifyingGlass size={20} color={theme.palette.text.primary} />
-          </SearchIconWrapper>
-          <StyledInputBase placeholder="Search..." inputProps={{ "aria-label": "search" }} />
-        </Search>
-
-        {/* Archive */}
-        <Stack
-          direction="row"
-          alignItems="center"
-          justifyContent="space-between"
-          sx={{
-            p: 1.5,
-            borderRadius: 2,
-            backgroundColor: theme.palette.background.paper,
-            boxShadow: theme.shadows[1],
-          }}
-        >
-          <ArchiveBox size={22} color={theme.palette.text.primary} />
-          <Button variant="contained" size="small">
-            Archive
-          </Button>
-        </Stack>
-
-        <Divider />
-
-        {/* Chats */}
-        <ScrollableContainer>
-          {pinnedChats.length > 0 && (
-            <>
-              <Typography variant="subtitle2" color="text.secondary" mt={1} mb={0.5}>
-                Pinned
-              </Typography>
-              <Stack spacing={1} mb={2}>
-                {pinnedChats.map((chat) => (
-                  <ChatElement
-                    key={chat.id}
-                    {...chat}
-                    isSelected={selectedChat === chat.id}
-                    onClick={handleChatClick}
-                  />
-                ))}
-              </Stack>
-              <Divider sx={{ mb: 2 }} />
-            </>
-          )}
-
-          <Typography variant="subtitle2" color="text.secondary" mb={1}>
-            All Chats
-          </Typography>
-          <Stack spacing={1}>
-            {allChats.map((chat) => (
-              <ChatElement
-                key={chat.id}
-                {...chat}
-                isSelected={selectedChat === chat.id}
-                onClick={handleChatClick}
-              />
-            ))}
+      <Box
+        sx={{
+          height: "100vh",
+          width: 330,
+          backgroundColor: theme.palette.background.default,
+          borderRadius: 3,
+          boxShadow: theme.shadows[5],
+          p: 2,
+        }}
+      >
+        <Stack spacing={3} height="100%">
+          {/* Header */}
+          <Stack direction="row" justifyContent="space-between" alignItems="center">
+            <Typography variant="h6" fontWeight={700}>
+              Chats
+            </Typography>
+            <Stack direction={"Rows"}>
+              <IconButton onClick={() => {
+                handleOpenDialog()
+              }}>
+                <Users size={22} color={theme.palette.text.primary} />
+              </IconButton>
+              <IconButton>
+                <CircleDashed size={22} color={theme.palette.text.primary} />
+              </IconButton>
+            </Stack>
           </Stack>
-        </ScrollableContainer>
-      </Stack>
-    </Box>
+
+          {/* Search */}
+          <Search>
+            <SearchIconWrapper>
+              <MagnifyingGlass size={20} color={theme.palette.text.primary} />
+            </SearchIconWrapper>
+            <StyledInputBase placeholder="Search..." inputProps={{ "aria-label": "search" }} />
+          </Search>
+
+          {/* Archive */}
+          <Stack
+            direction="row"
+            alignItems="center"
+            justifyContent="space-between"
+            sx={{
+              p: 1.5,
+              borderRadius: 2,
+              backgroundColor: theme.palette.background.paper,
+              boxShadow: theme.shadows[1],
+            }}
+          >
+            <ArchiveBox size={22} color={theme.palette.text.primary} />
+            <Button variant="contained" size="small">
+              Archive
+            </Button>
+          </Stack>
+
+          <Divider />
+
+          {/* Chats */}
+          <ScrollableContainer>
+            {pinnedChats.length > 0 && (
+              <>
+                <Typography variant="subtitle2" color="text.secondary" mt={1} mb={0.5}>
+                  Pinned
+                </Typography>
+                <Stack spacing={1} mb={2}>
+                  {pinnedChats.map((chat) => (
+                    <ChatElement
+                      key={chat.id}
+                      {...chat}
+                      isSelected={selectedChat === chat.id}
+                      onClick={handleChatClick}
+                    />
+                  ))}
+                </Stack>
+                <Divider sx={{ mb: 2 }} />
+              </>
+            )}
+
+            <Typography variant="subtitle2" color="text.secondary" mb={1}>
+              All Chats
+            </Typography>
+            <Stack spacing={1}>
+              {allChats.map((chat) => (
+                <ChatElement
+                  key={chat.id}
+                  {...chat}
+                  isSelected={selectedChat === chat.id}
+                  onClick={handleChatClick}
+                />
+              ))}
+            </Stack>
+          </ScrollableContainer>
+        </Stack>
+      </Box>
+      {openDialdog && <Friends open={openDialdog} handleclose={handleCloseDialog} />}
+    </>
   );
 };
 
