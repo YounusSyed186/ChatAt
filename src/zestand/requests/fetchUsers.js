@@ -10,7 +10,7 @@ export const FetchUsers = async () => {
     const headers = getAuthHeaders();
     console.log("Fetching users with headers:", headers); // Debug headers
 
-    const response = await axios.get(`${BASE_URL}/api/users/find-users`, { headers });
+    const response = await axios.get(`${BASE_URL}/api/find-users`, { headers });
 
     // Check the structure of the response
     console.log("Response data:", response); // Debugging the entire response

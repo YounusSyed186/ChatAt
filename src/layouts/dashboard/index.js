@@ -5,12 +5,18 @@ import authState from '../../zestand/authStates';
 import { connectSocket, getSocket } from '../../socket';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
+import useConversationStore from '../../zestand/chats';
 
 const DashboardLayout = () => {
   const userLoggedIn = authState((state) => state.userLoggedIn);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [snackbarSeverity, setSnackbarSeverity] = useState('info');
+  const conversations = useConversationStore((state) => state.direct_chat.conversations);
+  const updateDirectConversation = useConversationStore((state) => state.updateDirectConversation);
+  const addDirectConversation = useConversationStore((state) => state.addDirectConversation);
+  const setConversation = authState((state) => state.setConversation);
+
 
   useEffect(() => {
     if (!userLoggedIn) return;
@@ -44,15 +50,28 @@ const DashboardLayout = () => {
       setSnackbarSeverity("success");
       setSnackbarOpen(true);
     };
+    const handleStartChat = (data) => {
+      console.log(data)
+      const existing_conversation = conversations.find((el) => el.id === data._id)
+      if (existing_conversation) {
+        //already have this conversation 
+        updateDirectConversation({ conversations: data })
+      } else {
+        addDirectConversation({ conversations: data })
+      }
+      setConversation({ room_id: data._id })
+    }
 
     socket.on("new_friend_request", handleNewFriendRequest);
     socket.on("request_accepted", handleRequestAccepted);
     socket.on("request_send", handleRequestSent);
+    socket.on("start_chat",)
 
     return () => {
-      socket.off("new_friend_request", handleNewFriendRequest);
-      socket.off("request_accepted", handleRequestAccepted);
-      socket.off("request_send", handleRequestSent);
+      socket?.off("new_friend_request", handleNewFriendRequest);
+      socket?.off("request_accepted", handleRequestAccepted);
+      socket?.off("request_send", handleRequestSent);
+      socket?.off("requsstart_chat")
     };
   }, [userLoggedIn]);
 

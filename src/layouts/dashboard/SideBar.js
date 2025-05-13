@@ -10,47 +10,49 @@ import {
   useTheme,
 } from "@mui/material";
 import React, { useState, useEffect } from "react";
-import { Outlet, useNavigate, useLocation } from "react-router-dom"; // Import useLocation
+import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import Logo from "../../assets/Images/logo.ico";
 import { Nav_Buttons, Profile_Menu } from "../../data";
 import { Gear } from "phosphor-react";
 import useSettings from "../../hooks/useSettings";
 import authState from "../../zestand/authStates";
+import useSidebarState from "../../zestand/sidebarState";
+import Welcome from "../../pages/welcome";
 
 const Sidebar = () => {
   const theme = useTheme();
-  const [selected, setSelected] = useState(0);
+  const { selectedIndex, setSelectedIndex } = useSidebarState();
   const { onToggleMode } = useSettings();
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
-  const {setLogout, clear} =authState.getState()
+  const { setLogout, clear } = authState.getState();
 
   const navigate = useNavigate();
-  const location = useLocation(); // Get current location
+  const location = useLocation();
 
+  // Sync state with current route
   useEffect(() => {
-    // Sync the selected state with the current route
     const currentPath = location.pathname;
 
-    // Check if the path matches one of your nav buttons' paths
     Nav_Buttons.forEach((item, index) => {
       if (currentPath.includes(item.path)) {
-        setSelected(index);
+        setSelectedIndex(index);
       }
     });
 
-    // If you're on the settings page, set selected to 3 (Settings button)
-    if (currentPath.includes("/Setting")) {
-      setSelected(3);
+    if (currentPath.includes("/setting")) {
+      setSelectedIndex(Nav_Buttons.length); // Settings as last index
     }
-  }, [location.pathname]); // Update on route change
+  }, [location.pathname, setSelectedIndex]);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
+
   const handleClose = () => {
     setAnchorEl(null);
   };
+
   const getMenuPath = (index) => {
     switch (index) {
       case 0:
@@ -58,10 +60,12 @@ const Sidebar = () => {
       case 1:
         return "/setting";
       case 2:
-        //todo => Update token set is auth to false
         return "auth/login";
+      default:
+        return "/";
     }
   };
+
   return (
     <Box sx={{ display: "flex", height: "100vh", width: "100%", gap: 1 }}>
       {/* Sidebar */}
@@ -96,13 +100,14 @@ const Sidebar = () => {
               <img src={Logo} alt="chatAt Logo" width={32} height={32} />
             </Box>
 
+            {/* Navigation Buttons */}
             <Stack spacing={3} alignItems="center">
-              {Nav_Buttons.map((item) => (
+              {Nav_Buttons.map((item, index) => (
                 <Box
-                  key={item.index}
+                  key={index}
                   sx={{
                     backgroundColor:
-                      selected === item.index
+                      selectedIndex === index
                         ? theme.palette.primary.main
                         : "transparent",
                     borderRadius: 1.5,
@@ -110,12 +115,12 @@ const Sidebar = () => {
                 >
                   <IconButton
                     onClick={() => {
-                      setSelected(item.index);
+                      setSelectedIndex(index);
                       if (item.path) navigate(item.path);
                     }}
                     sx={{
                       color:
-                        selected === item.index
+                        selectedIndex === index
                           ? theme.palette.primary.contrastText
                           : theme.palette.text.secondary,
                     }}
@@ -127,20 +132,26 @@ const Sidebar = () => {
 
               <Divider sx={{ width: 48 }} />
 
+              {/* Settings Button */}
               <Box
                 sx={{
                   backgroundColor:
-                    selected === 3 ? theme.palette.primary.main : "transparent",
+                    selectedIndex === Nav_Buttons.length
+                      ? theme.palette.primary.main
+                      : "transparent",
                   borderRadius: 1.5,
                 }}
               >
                 <IconButton
                   onClick={() => {
-                    setSelected(3);
-                    navigate("/Setting");
+                    setSelectedIndex(Nav_Buttons.length);
+                    navigate("/setting");
                   }}
                   sx={{
-                    color: selected === 3 ? "#fff" : theme.palette.text.primary,
+                    color:
+                      selectedIndex === Nav_Buttons.length
+                        ? theme.palette.primary.contrastText
+                        : theme.palette.text.secondary,
                   }}
                 >
                   <Gear />
@@ -149,6 +160,7 @@ const Sidebar = () => {
             </Stack>
           </Stack>
 
+          {/* Bottom Section */}
           <Stack spacing={2} alignItems="center">
             <Switch onChange={onToggleMode} defaultChecked />
             <Avatar
@@ -174,17 +186,15 @@ const Sidebar = () => {
                   <MenuItem
                     key={index}
                     onClick={() => {
-                      handleClick();
+                      if (index === 2) {
+                        setLogout(true);
+                        clear();
+                      }
+                      navigate(getMenuPath(index));
+                      handleClose();
                     }}
                   >
                     <Stack
-                      onClick={() =>{
-                        if (index ===2) {
-                            setLogout(true)
-                            clear()
-                          }
-                        navigate(getMenuPath(index))
-                        }}
                       direction="row"
                       alignItems="center"
                       justifyContent="space-between"
@@ -203,9 +213,12 @@ const Sidebar = () => {
       </Box>
 
       {/* Main Content */}
+      {/* Main Content */}
+      
       <Box sx={{ flex: 1, overflow: "auto" }}>
-        <Outlet />
+        {selectedIndex === null ? <Welcome /> : <Outlet />}
       </Box>
+
     </Box>
   );
 };

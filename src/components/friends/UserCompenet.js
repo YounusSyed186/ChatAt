@@ -56,6 +56,7 @@ import {
     const theme = useTheme();
     const name = `${firstName} ${lastName}`;
     const user_id = localStorage.getItem('user_id');
+    console.log(_id, user_id )
 
     const handleSendRequest = () => {
       try {

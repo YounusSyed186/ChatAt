@@ -1,10 +1,11 @@
 // socket.js
 import { io } from "socket.io-client";
+import { BASE_URL } from "./config";
 
 let socket = null;
 
 const connectSocket = (user_id) => {
-  socket = io("http://localhost:4000", {
+  socket = io(`${BASE_URL}`, {
     query: { user_id },
   });
 };

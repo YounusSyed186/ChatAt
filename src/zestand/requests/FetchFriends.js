@@ -8,7 +8,7 @@ export const FetchFriends = async () => {
   
     try {
       const headers = getAuthHeaders();
-      const response = await axios.get(`${BASE_URL}/api/users/get-Friends`, { headers });
+      const response = await axios.get(`${BASE_URL}/api/get-Friends`, { headers });
       console.log("Friends:", response.data);
       setFriends(response.data.data.friends);
     } catch (error) {
