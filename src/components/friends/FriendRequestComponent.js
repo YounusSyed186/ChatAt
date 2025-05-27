@@ -53,11 +53,9 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
   },
 }));
 
-const FriendRequestComponent = ({ firstName, lastName, sender, online, img, id }) => {
+const FriendRequestComponent = ({ firstName, lastName, sender, online, img, id,el }) => {
   // Call the hook inside the component
-  const user_id = window.localStorage.getItem("user_id");
-  console.log(user_id)
-
+  const user_id = localStorage.getItem("user_id");
   const theme = useTheme();
   const name = `${firstName} ${lastName}`;
   const receiver=user_id

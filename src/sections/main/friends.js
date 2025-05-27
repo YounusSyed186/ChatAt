@@ -10,153 +10,136 @@ import FriendsComponets from '../../components/friends/FriendsComponent';
 
 // Users List Tab
 const UsersList = () => {
-    const users = useUserStore((state) => state.users);
-    const [loading, setLoading] = useState(true); // Track loading state
-    const [error, setError] = useState(null); // Track error state
-    
-    useEffect(() => {
-      const fetchUsers = async () => {
-        try {
-          if (users.length === 0) {
-            setLoading(true);
-            await FetchUsers(); // Fetch only if users are empty
-          }
-        } catch (err) {
-          setError("Failed to load users.");
-          console.error("Error fetching users:", err);
-        } finally {
-          setLoading(false);
-        }
-      };
-  
-      fetchUsers();
-    }, [users.length]); // Dependencies only on users length
-  
-    return (
-      <div>
-        <h2>Explore Users</h2>
-        {loading ? (
-          <Box display="flex" justifyContent="center" alignItems="center" height={100}>
-            <CircularProgress />
-          </Box>
-        ) : error ? (
-          <Box display="flex" justifyContent="center" alignItems="center" height={100}>
-            <Typography color="error">{error}</Typography>
-          </Box>
-        ) : users.length > 0 ? (
-          <List>
-            {users.map((el,user) => (
-              <>
-              <UserComponent key={el._id} {...el}/>
-              </>
-            ))}
-          </List>
-        ) : (
-          <Typography>No users available.</Typography>
-        )}
-      </div>
-    );
-  };
-  
-  const FriendsList = () => {
-    const friendRequests = useUserStore((state) => state.friendRequests); // Renamed for clarity
-    const [loading, setLoading] = useState(true); // Track loading state
-    const [error, setError] = useState(null); // Track error state
-  
-    useEffect(() => {
-        const fetchUsers = async () => {
-          setLoading(true);
-          try {
-            await FetchUsers(); // Always fetch on mount
-          } catch (err) {
-            setError("Failed to load users.");
-            console.error("Error fetching users:", err);
-          } finally {
-            setLoading(false);
-          }
-        };
-      
-        fetchUsers();
-      }, []); // Empty dependency array to run only once on mount
-       // Dependency on the length of friendRequests
-  
-    return (
-      <div>
-        <h2>Explore Friends</h2>
-        {loading ? (
-          <Box display="flex" justifyContent="center" alignItems="center" height={100}>
-            <CircularProgress />
-          </Box>
-        ) : error ? (
-          <Box display="flex" justifyContent="center" alignItems="center" height={100}>
-            <Typography color="error">{error}</Typography>
-          </Box>
-        ) : friendRequests.length > 0 ? (
-          <List>
-            {friendRequests.map((el,idx) => (
-              <>
-               <FriendsComponets key={el.key} {...el.sender}/>
-              </>
-            ))}
-          </List>
-        ) : (
-          <Typography>No friend requests available.</Typography>
-        )}
-      </div>
-    );
-  };
-  
-  const FriendRequestsList = () => {
-    const friendRequests = useUserStore((state) => state.friendRequests); // Renamed for clarity
-    const [loading, setLoading] = useState(true); // Track loading state
-    const [error, setError] = useState(null); // Track error state
-  
-    useEffect(() => {
-      const fetchFriendRequests = async () => {
-        try {
-          if (friendRequests.length === 0) {
-            setLoading(true);
-            await FetchFriendRequest(); // Fetch friend requests if none exist
-          }
-        } catch (err) {
-          setError("Failed to load friend requests.");
-          console.error("Error fetching friend requests:", err);
-        } finally {
-          setLoading(false); // Set loading to false after fetch completes
-        }
-      };
-  
-      fetchFriendRequests(); // Direct async call in useEffect
-    }, [friendRequests.length]); // Dependencies on the length of friendRequests
-  
-    return (
-      <div>
-        <h2>Explore Requests</h2>
-        {loading ? (
-          <Box display="flex" justifyContent="center" alignItems="center" height={100}>
-            <CircularProgress />
-          </Box>
-        ) : error ? (
-          <Box display="flex" justifyContent="center" alignItems="center" height={100}>
-            <Typography color="error">{error}</Typography>
-          </Box>
-        ) : friendRequests.length > 0 ? (
-          <List>
-            {friendRequests.map((el,idx) => (
-              <>
-             <FriendRequestComponent  key={el._id} {...el.sender} id={el._id}/>
-              </>
-            ))}
-          </List>
-        ) : (
-          <Typography>No friend requests available.</Typography>
-        )}
-      </div>
-    );
-  };
+  const users = useUserStore((state) => state.users);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
- 
+  useEffect(() => {
+    const fetchUsers = async () => {
+      setLoading(true);
+      try {
+        await FetchUsers();
+      } catch (err) {
+        console.error("Error fetching users:", err);
+        setError("Failed to load users.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUsers();
+  }, []);
+
+  return (
+    <div>
+      <h2>Explore Users</h2>
+      {loading ? (
+        <Box display="flex" justifyContent="center" alignItems="center" height={100}>
+          <CircularProgress />
+        </Box>
+      ) : error ? (
+        <Typography color="error">{error}</Typography>
+      ) : users.length > 0 ? (
+        <List>
+          {users.map((el) => (
+            <UserComponent key={el._id} {...el} />
+          ))}
+        </List>
+      ) : (
+        <Typography>No users available.</Typography>
+      )}
+    </div>
+  );
+};
+
+const FriendsList = () => {
+  const friends = useUserStore((state) => state.friends); // Should be friends, not friendRequests
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchFriends = async () => {
+      setLoading(true);
+      try {
+        await FetchFriends();
+      } catch (err) {
+        console.error("Error fetching friends:", err);
+        setError("Failed to load friends.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFriends();
+  }, []);
+
+  return (
+    <div>
+      <h2>Explore Friends</h2>
+      {loading ? (
+        <Box display="flex" justifyContent="center" alignItems="center" height={100}>
+          <CircularProgress />
+        </Box>
+      ) : error ? (
+        <Typography color="error">{error}</Typography>
+      ) : friends.length > 0 ? (
+        <List>
+          {friends.map((el) => (
+            <FriendsComponets key={el._id} {...el} />
+          ))}
+        </List>
+      ) : (
+        <Typography>No friends available.</Typography>
+      )}
+    </div>
+  );
+};
+
   
+ const FriendRequestsList = () => {
+  const friendRequests = useUserStore((state) => state.friendRequests);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchFriendRequest = async () => {
+      setLoading(true);
+      try {
+        await FetchFriendRequest();
+      } catch (err) {
+        console.error("Error fetching friend requests:", err);
+        setError("Failed to load friend requests.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFriendRequest();
+  }, []);
+
+  return (
+    <div>
+      <h2>Explore Requests</h2>
+      {console.log("Hi how are YOu")}
+      {loading ? (
+        <Box display="flex" justifyContent="center" alignItems="center" height={100}>
+          <CircularProgress />
+        </Box>
+      ) : error ? (
+        <Typography color="error">{error}</Typography>
+      ) : friendRequests.length > 0 ? (
+        <List>
+          {friendRequests.map((el) => (
+            <FriendRequestComponent key={el._id} {...el.sender} sender={el.sender._id} id={el._id} el={el} />
+          ))}
+        </List>
+      ) : (
+        <Typography>No friend requests available.</Typography>
+      )}
+    </div>
+  );
+};
+
 
 
 // Requests Tab

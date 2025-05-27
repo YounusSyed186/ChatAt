@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   alpha,
   Box,
@@ -17,10 +17,11 @@ import {
   ArchiveBox,
   CircleDashed,
   MagnifyingGlass,
-  Rows,
-  User,
   Users,
 } from "phosphor-react";
+
+import useConversationStore from "../../zestand/chats";
+import { getSocket } from "../../socket"; // Adjust the path as needed
 import Friends from "../../sections/main/friends";
 
 // Styled Badge for online status
@@ -94,10 +95,11 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 const ChatElement = ({
   id,
   name,
-  message,
+  msg,
   time,
-  unreadCount,
-  avatar,
+  unread,
+  img,
+  pinned,
   isSelected,
   onClick,
 }) => {
@@ -131,7 +133,7 @@ const ChatElement = ({
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
         variant="dot"
       >
-        <Avatar src={avatar} sx={{ width: 48, height: 48 }} />
+        <Avatar src={img} sx={{ width: 48, height: 48 }} />
       </StyledBadge>
       <Stack ml={2} flexGrow={1}>
         <Typography variant="subtitle1" fontWeight={600}>
@@ -142,14 +144,14 @@ const ChatElement = ({
           color={isSelected ? "inherit" : "text.secondary"}
           noWrap
         >
-          {message}
+          {msg}
         </Typography>
       </Stack>
       <Stack alignItems="flex-end" spacing={0.5}>
         <Typography variant="caption" color="text.secondary">
           {time}
         </Typography>
-        {unreadCount > 0 && (
+        {unread > 0 && (
           <Box
             sx={{
               bgcolor: theme.palette.error.main,
@@ -164,7 +166,7 @@ const ChatElement = ({
               fontWeight: "bold",
             }}
           >
-            {unreadCount}
+            {unread}
           </Box>
         )}
       </Stack>
@@ -172,77 +174,33 @@ const ChatElement = ({
   );
 };
 
-const chatList = [
-  {
-    id: 1,
-    name: "Pink Panda",
-    message: "You: thanks",
-    time: "12:00",
-    unreadCount: 2,
-    avatar: "/avatar.png",
-    isPinned: true,
-  },
-  {
-    id: 2,
-    name: "Blue Whale",
-    message: "Let's meet tomorrow",
-    time: "11:45",
-    unreadCount: 1,
-    avatar: "/avatar.png",
-    isPinned: false,
-  },
-  {
-    id: 3,
-    name: "Green Turtle",
-    message: "Okay, see you!",
-    time: "10:30",
-    unreadCount: 0,
-    avatar: "/avatar.png",
-    isPinned: false,
-  },
-  {
-    id: 4,
-    name: "Red Fox",
-    message: "Can you send me the file?",
-    time: "09:15",
-    unreadCount: 3,
-    avatar: "/avatar.png",
-    isPinned: true,
-  },
-  {
-    id: 5,
-    name: "Yellow Canary",
-    message: "Sure, I'll do it.",
-    time: "08:45",
-    unreadCount: 0,
-    avatar: "/avatar.png",
-    isPinned: false,
-  },
-];
-
 // Main Component
 const Chats = () => {
-  const [openDialdog, setopenDialdog] = useState(false)
-
-  const handleOpenDialog = () => {
-    setopenDialdog(true)
-  }
-  const handleCloseDialog = () => {
-    setopenDialdog(false)
-  }
   const theme = useTheme();
   const [selectedChat, setSelectedChat] = useState(null);
+  const [openDialog, setOpenDialog] = useState(false);
+  const user_id = localStorage.getItem("user_id");
+
+  const {
+    direct_chat: { conversations },
+    fetchDirectConversations,
+  } = useConversationStore();
+  const socket = getSocket() 
+  useEffect(() => {
+    socket.emit("get_direct_conversations", { user_id }, (data) => {
+      fetchDirectConversations(data);
+    });
+  }, [user_id, fetchDirectConversations]);
 
   const handleChatClick = (id) => {
     setSelectedChat(id);
   };
 
-  const pinnedChats = chatList.filter((chat) => chat.isPinned);
-  const allChats = chatList.filter((chat) => !chat.isPinned);
+  const pinnedChats = conversations.filter((chat) => chat.pinned);
+  const allChats = conversations.filter((chat) => !chat.pinned);
 
   return (
     <>
-
       <Box
         sx={{
           height: "100vh",
@@ -259,10 +217,8 @@ const Chats = () => {
             <Typography variant="h6" fontWeight={700}>
               Chats
             </Typography>
-            <Stack direction={"Rows"}>
-              <IconButton onClick={() => {
-                handleOpenDialog()
-              }}>
+            <Stack direction="row">
+              <IconButton onClick={() => setOpenDialog(true)}>
                 <Users size={22} color={theme.palette.text.primary} />
               </IconButton>
               <IconButton>
@@ -336,7 +292,9 @@ const Chats = () => {
           </ScrollableContainer>
         </Stack>
       </Box>
-      {openDialdog && <Friends open={openDialdog} handleclose={handleCloseDialog} />}
+
+      {/* Dialog */}
+      {openDialog && <Friends open={openDialog} handleclose={() => setOpenDialog(false)} />}
     </>
   );
 };

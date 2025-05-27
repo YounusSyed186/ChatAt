@@ -52,11 +52,11 @@ import {
     },
   }));
   
-  const UserComponent = ({ firstName, lastName, _id, online, img }) => {
+  const UserComponent = ({ firstName, lastName, _id, online, img, id}) => {
     const theme = useTheme();
     const name = `${firstName} ${lastName}`;
-    const user_id = localStorage.getItem('user_id');
-    console.log(_id, user_id )
+    const user_id = window.localStorage.getItem("user_id");  
+    // console.log(id)
 
     const handleSendRequest = () => {
       try {
