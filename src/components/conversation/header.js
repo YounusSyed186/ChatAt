@@ -49,11 +49,18 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
   },
 }));
 
-const Header = () => {
+const Header = ({ conversation }) => {
   const theme = useTheme();
   const user = useStore((state) => state.user);
   const setOpen = useStore((state) => state.setOpen);
   const setType = useStore((state) => state.setType);
+
+  // Find the other participant to display
+  const otherUser = conversation
+    ? conversation.participants.find((p) => p._id !== user?.id)
+    : null;
+
+  const isOnline = otherUser?.status === "Online";
 
   return (
     <Box
@@ -72,22 +79,32 @@ const Header = () => {
         <IconButton sx={{ color: theme.palette.primary.contrastText }}>
           <ArrowLeft />
         </IconButton>
-        <StyledBadge
-          overlap="circular"
-          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-          variant="dot"
-          onClick={() => {
-            setOpen(!user.open);
-            setType("CONTACT");
-          }}
-        >
+
+        {otherUser ? (
+          <StyledBadge
+            overlap="circular"
+            anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+            variant={isOnline ? "dot" : "standard"}
+            onClick={() => {
+              setOpen(!user.open);
+              setType("CONTACT");
+            }}
+          >
+            <Avatar src={otherUser.avatar || "/avatar.png"} alt="User Avatar" />
+          </StyledBadge>
+        ) : (
           <Avatar src="/avatar.png" alt="User Avatar" />
-        </StyledBadge>
+        )}
+
         <Stack direction="column" spacing={0.5}>
           <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>
-            John Doe
+            {otherUser
+              ? `${otherUser.firstName} ${otherUser.lastName}`
+              : "Select a conversation"}
           </Typography>
-          <Typography variant="body2">Online</Typography>
+          <Typography variant="body2" color={isOnline ? "#44b700" : "inherit"}>
+            {isOnline ? "Online" : "Offline"}
+          </Typography>
         </Stack>
       </Stack>
 
@@ -118,6 +135,5 @@ const Header = () => {
     </Box>
   );
 };
-
 
 export default Header;

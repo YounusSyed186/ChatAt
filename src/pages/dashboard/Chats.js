@@ -12,10 +12,12 @@ import {
   Badge,
   useTheme,
   styled,
+  CircularProgress,
 } from "@mui/material";
 import {
   ArchiveBox,
   CircleDashed,
+  List,
   MagnifyingGlass,
   Users,
 } from "phosphor-react";
@@ -23,6 +25,10 @@ import {
 import useConversationStore from "../../zestand/chats";
 import { getSocket } from "../../socket"; // Adjust the path as needed
 import Friends from "../../sections/main/friends";
+import useUserStore from "../../zestand/requests/chatStates";
+import { FetchFriends } from "../../zestand/requests/FetchFriends";
+import FriendsComponets from "../../components/friends/FriendsComponent";
+import ConversationList from "./allChats";
 
 // Styled Badge for online status
 const StyledBadge = styled(Badge)(({ theme }) => ({
@@ -173,6 +179,47 @@ const ChatElement = ({
     </Box>
   );
 };
+const FriendsList = () => {
+  const friends = useUserStore((state) => state.friends);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchFriends = async () => {
+      setLoading(true);
+      try {
+        await FetchFriends(); // This should update your Zustand store
+      } catch (err) {
+        console.error("Error fetching friends:", err);
+        setError("Failed to load friends.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFriends();
+  }, []);
+
+  return (
+    <div>
+      {loading ? (
+        <CircularProgress />
+      ) : error ? (
+        <Typography color="error">{error}</Typography>
+      ) : (
+        <Stack>
+          {friends.length > 0 ? (
+            friends.map((el) => (
+              <FriendsComponets key={el._id} {...el} />
+            ))
+          ) : (
+            <Typography>No friends to display.</Typography>
+          )}
+        </Stack>
+      )}
+    </div>
+  );
+};
 
 // Main Component
 const Chats = () => {
@@ -185,7 +232,7 @@ const Chats = () => {
     direct_chat: { conversations },
     fetchDirectConversations,
   } = useConversationStore();
-  const socket = getSocket() 
+  const socket = getSocket()
   useEffect(() => {
     socket.emit("get_direct_conversations", { user_id }, (data) => {
       fetchDirectConversations(data);
@@ -280,14 +327,8 @@ const Chats = () => {
               All Chats
             </Typography>
             <Stack spacing={1}>
-              {allChats.map((chat) => (
-                <ChatElement
-                  key={chat.id}
-                  {...chat}
-                  isSelected={selectedChat === chat.id}
-                  onClick={handleChatClick}
-                />
-              ))}
+              <ConversationList />
+              
             </Stack>
           </ScrollableContainer>
         </Stack>

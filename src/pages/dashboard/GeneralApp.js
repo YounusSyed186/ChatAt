@@ -6,6 +6,7 @@ import Contact from "../../components/contacts";
 import useStore from "../../zestand/store.js";
 import SharedMessages from "../../components/SharedMessages.js";
 import StarredMessages from "../../components/StarredMessages.js";
+import useConversationStore from "../../zestand/conversation.js";
 
 
 
@@ -13,6 +14,7 @@ const GeneralApp = () => {
   // Directly accessing the `user` part of the state
   const user = useStore((state) => state.user);
   const setOpen = useStore((state) => state.setOpen);
+  const { conversations, setConversations } = useConversationStore();
   const renderUserComponent = () => {
     if (!user.open) return null;
 

@@ -62,8 +62,8 @@ import { Chat } from 'phosphor-react';
     const handleSendRequest = () => {
       try {
         const socket = getSocket();
-        socket.emit("friend_request", { to: _id, from: user_id }, () => {
-          alert("Request sent");
+        socket.emit("start_conversation", { to: _id, from: user_id }, () => {
+          alert("Send Message");
         });
       } catch (err) {
         console.error(err.message);
@@ -99,7 +99,7 @@ import { Chat } from 'phosphor-react';
             variant="contained"
             size="small"
             color="primary"
-            // onClick={handleSendRequest}
+            onClick={handleSendRequest}
             sx={{ textTransform: 'none', fontWeight: 500 }}
           >
             <Chat />

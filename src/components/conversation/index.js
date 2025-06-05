@@ -1,22 +1,59 @@
-import React, { useState } from "react";
-import {
-  Box,
-} from "@mui/material";
+import React, { useState, useEffect } from "react";
+import { Box } from "@mui/material";
 
 import Footer from "./footer";
 import MessageArea from "./messageArea";
 import Header from "./header";
+import useConversationStore from "../../zestand/conversation";
 
 const Conversation = () => {
+  const { selectedConversation } = useConversationStore();
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
 
-  const handleSendMessage = () => {
-    if (newMessage.trim() !== "") {
-      setMessages([...messages, { id: Date.now(), text: newMessage, sender: "me" }]);
-      setNewMessage("");
+  // When selectedConversation changes, update messages state
+  useEffect(() => {
+    if (selectedConversation && selectedConversation.messages) {
+      setMessages(selectedConversation.messages);
+    } else {
+      setMessages([]);
     }
+  }, [selectedConversation]);
+
+  const handleSendMessage = () => {
+    if (newMessage.trim() === "") return;
+
+    // New message object
+    const newMsg = {
+      id: Date.now(),
+      text: newMessage,
+      sender: "me",
+      timestamp: new Date().toISOString(),
+    };
+
+    // Append new message locally
+    setMessages((prev) => [...prev, newMsg]);
+    setNewMessage("");
+
+    // TODO: emit socket event or API call to send message to server
   };
+
+  if (!selectedConversation) {
+    return (
+      <Box
+        sx={{
+          height: "100%",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          color: "text.secondary",
+          fontSize: 18,
+        }}
+      >
+        Select a conversation to start chatting.
+      </Box>
+    );
+  }
 
   return (
     <Box
@@ -31,10 +68,10 @@ const Conversation = () => {
       }}
     >
       {/* Header */}
-      <Header />
+      <Header conversation={selectedConversation} />
 
       {/* Message Area */}
-      <MessageArea withWrapper={true} />
+      <MessageArea messages={messages} withWrapper={true} />
 
       {/* Footer */}
       <Footer
