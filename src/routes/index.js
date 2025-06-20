@@ -20,14 +20,14 @@ const Loadable = (Component) => (props) => {
 export default function Router() {
   return useRoutes([
     {
-      path:"/auth",
-      element:<MainLayout />,
-      children:[
-        {element:<Login />, path:"login"},
-        {element:<Register/>, path:"register"},
-        {element:<ForgetPassword/>, path:"ForgetPassword"},
-        {element:<Verify />, path:"Verify"},
-        {element:<SetNewPasssword />, path:"New-Password"},
+      path: "/auth",
+      element: <MainLayout />,
+      children: [
+        { element: <Login />, path: "login" },
+        { element: <Register />, path: "register" },
+        { element: <ForgetPassword />, path: "ForgetPassword" },
+        { element: <Verify />, path: "Verify" },
+        { element: <SetNewPasssword />, path: "New-Password" },
       ]
     },
     {
@@ -41,8 +41,11 @@ export default function Router() {
         { path: "Group", element: <Group /> },
         { path: "call", element: <Call /> },
         { path: "Profile", element: <Profile /> },
-        
-        
+        { path: "call/audio/:roomID", element: <AudioCallPage isVideo={false} /> },
+        { path: "call/video/:roomID", element: <VideoCallPage isVideo={true} /> },
+
+
+
         { path: "404", element: <Page404 /> },
         { path: "*", element: <Navigate to="/404" replace /> },
       ],
@@ -67,19 +70,26 @@ const Profile = Loadable(
   lazy(() => import("../pages/dashboard/Profile")),
 );
 
-const Register =Loadable(
-  lazy(()=>import("../pages/auth/register"))
+const Register = Loadable(
+  lazy(() => import("../pages/auth/register"))
 )
-const ForgetPassword =Loadable(
-  lazy(()=>import("../pages/auth/forgetPassword"))
+const ForgetPassword = Loadable(
+  lazy(() => import("../pages/auth/forgetPassword"))
 )
-const SetNewPasssword =Loadable(
-  lazy(()=>import("../pages/auth/SetNewPasssword"))
+const SetNewPasssword = Loadable(
+  lazy(() => import("../pages/auth/SetNewPasssword"))
 )
-const Verify =Loadable(
-  lazy(()=>import("../pages/auth/verify"))
+const Verify = Loadable(
+  lazy(() => import("../pages/auth/verify"))
 )
 const Setting = Loadable(
   lazy(() => import("../pages/dashboard/setting")),
 );
+const AudioCallPage = Loadable(
+  lazy(() => import("../CallPage"))
+);
+const VideoCallPage = Loadable(
+  lazy(() => import("../CallPage"))
+);
+
 const Page404 = Loadable(lazy(() => import("../pages/Page404")));

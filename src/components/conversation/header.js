@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Box,
   Stack,
@@ -19,7 +20,6 @@ import {
 } from "phosphor-react";
 import useStore from "../../zestand/store";
 
-// Styled Badge for online status
 const StyledBadge = styled(Badge)(({ theme }) => ({
   "& .MuiBadge-badge": {
     backgroundColor: "#44b700",
@@ -51,16 +51,58 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 
 const Header = ({ conversation }) => {
   const theme = useTheme();
+  const navigate = useNavigate();
+
+  // Assuming socket is stored in Zustand store, else import or pass it as prop
+  const socket = useStore((state) => state.socket);
   const user = useStore((state) => state.user);
+  const open = useStore((state) => state.open);
   const setOpen = useStore((state) => state.setOpen);
   const setType = useStore((state) => state.setType);
 
-  // Find the other participant to display
   const otherUser = conversation
     ? conversation.participants.find((p) => p._id !== user?.id)
     : null;
 
   const isOnline = otherUser?.status === "Online";
+
+  // Example: effect for socket events or any side effect (optional)
+  useEffect(() => {
+    if (!socket) return;
+
+    // Example: listen to call accepted or rejected events, cleanup on unmount
+    const onCallAccepted = (data) => {
+      console.log("Call accepted", data);
+    };
+
+    socket.on("call_accepted", onCallAccepted);
+
+    return () => {
+      socket.off("call_accepted", onCallAccepted);
+    };
+  }, [socket]);
+
+  const toggleSidebar = useCallback(() => {
+    setOpen(!open);
+    setType("CONTACT");
+  }, [open, setOpen, setType]);
+
+  const handleVideoCall = useCallback(() => {
+    if (!conversation) return;
+    navigate(`/call/video/${conversation._id}`);
+    console.log("Start video call");
+  }, [navigate, conversation]);
+
+  const handlePhoneCall = useCallback(() => {
+    if (!socket || !otherUser || !conversation) return;
+    socket.emit("start_audio_call", {
+      from: user.id,
+      to: otherUser._id,
+      roomID: conversation._id,
+    });
+    navigate(`/call/audio/${conversation._id}`);
+    console.log("Start phone call");
+  }, [socket, user, otherUser, conversation, navigate]);
 
   return (
     <Box
@@ -76,7 +118,14 @@ const Header = ({ conversation }) => {
     >
       {/* Left Section */}
       <Stack direction="row" alignItems="center" spacing={2}>
-        <IconButton sx={{ color: theme.palette.primary.contrastText }}>
+        <IconButton
+          aria-label="Back"
+          sx={{ color: theme.palette.primary.contrastText }}
+          onClick={() => {
+            // Add your back button handler here
+            console.log("Back clicked");
+          }}
+        >
           <ArrowLeft />
         </IconButton>
 
@@ -85,10 +134,8 @@ const Header = ({ conversation }) => {
             overlap="circular"
             anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
             variant={isOnline ? "dot" : "standard"}
-            onClick={() => {
-              setOpen(!user.open);
-              setType("CONTACT");
-            }}
+            onClick={toggleSidebar}
+            sx={{ cursor: "pointer" }}
           >
             <Avatar src={otherUser.avatar || "/avatar.png"} alt="User Avatar" />
           </StyledBadge>
@@ -110,15 +157,36 @@ const Header = ({ conversation }) => {
 
       {/* Right Section */}
       <Stack direction="row" spacing={2} alignItems="center">
-        <IconButton sx={{ color: theme.palette.primary.contrastText }}>
+        <IconButton
+          aria-label="Start video call"
+          sx={{ color: theme.palette.primary.contrastText }}
+          onClick={handleVideoCall}
+          disabled={!otherUser || !isOnline}
+          title={otherUser && isOnline ? "Start Video Call" : "User offline"}
+        >
           <VideoCamera />
         </IconButton>
-        <IconButton sx={{ color: theme.palette.primary.contrastText }}>
+
+        <IconButton
+          aria-label="Start audio call"
+          sx={{ color: theme.palette.primary.contrastText }}
+          onClick={handlePhoneCall}
+          disabled={!otherUser || !isOnline}
+          title={otherUser && isOnline ? "Start Audio Call" : "User offline"}
+        >
           <Phone />
         </IconButton>
-        <IconButton sx={{ color: theme.palette.primary.contrastText }}>
+
+        <IconButton
+          aria-label="Search"
+          sx={{ color: theme.palette.primary.contrastText }}
+          onClick={() => {
+            console.log("Search clicked");
+          }}
+        >
           <MagnifyingGlass />
         </IconButton>
+
         <Divider
           orientation="vertical"
           flexItem
@@ -128,7 +196,14 @@ const Header = ({ conversation }) => {
             marginX: 1,
           }}
         />
-        <IconButton sx={{ color: theme.palette.primary.contrastText }}>
+
+        <IconButton
+          aria-label="More options"
+          sx={{ color: theme.palette.primary.contrastText }}
+          onClick={() => {
+            console.log("Options clicked");
+          }}
+        >
           <CaretDown />
         </IconButton>
       </Stack>

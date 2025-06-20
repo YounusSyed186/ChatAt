@@ -27,6 +27,8 @@ import {
   ArrowRight
 } from "phosphor-react";
 import useStore from "../zestand/store";
+import useConversationStore from "../zestand/conversation";
+
 
 // Slide animation for dialogs
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -76,8 +78,13 @@ const DeleteDialog = ({ open, handleClose }) => (
 const Contact = () => {
   const theme = useTheme();
   const isDark = theme.palette.mode === "dark";
-
   const user = useStore((state) => state.user);
+  const { selectedConversation } = useConversationStore();
+  const conversation = selectedConversation;
+  const otherUser = conversation
+    ? conversation.participants.find((p) => p._id !== user?.id)
+    : null;
+
   const setOpen = useStore((state) => state.setOpen);
   const setType = useStore((state) => state.setType);
 
@@ -127,11 +134,17 @@ const Contact = () => {
         }}
       >
         {/* Profile Section */}
+        {/* Profile Section */}
         <Stack alignItems="center" spacing={1}>
           <Avatar sx={{ width: 80, height: 80 }} src="/avatar.png" />
-          <Typography variant="subtitle1">John Doe</Typography>
+          <Typography variant="subtitle1">
+            {otherUser?.firstName} {otherUser?.lastName}
+          </Typography>
           <Typography variant="body2" color="text.secondary">
-            +91 6265 081 928
+            {otherUser?.email}
+          </Typography>
+          <Typography variant="caption" color={otherUser?.status === "Online" ? "green" : "text.secondary"}>
+            {otherUser?.status}
           </Typography>
 
           {/* Call Action Buttons */}
@@ -146,6 +159,7 @@ const Contact = () => {
             </Stack>
           </Stack>
         </Stack>
+
 
         <Divider sx={{ my: 3 }} />
 
